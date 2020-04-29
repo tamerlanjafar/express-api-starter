@@ -1,0 +1,8 @@
+.idea/
+.vscode/
+build/
+node_modules/
+
+src/config/config.env
+
+package-lock.json
