@@ -33,8 +33,8 @@ export default class UserService {
         return user;
     }
 
-    static async getUsers() {
-        const users = await User.findMany();
+    static async getUsers(query) {
+        const users = await User.findMany(query);
 
         return users;
     }

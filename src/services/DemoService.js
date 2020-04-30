@@ -47,8 +47,8 @@ export default class DemoService {
         return demo;
     }
 
-    static async getDemosByUser(userId) {
-        const demos = await Demo.getDemosByUser(userId);
+    static async getDemosByUser(query, userId) {
+        const demos = await Demo.getDemosByUser(query, userId);
 
         return demos;
     }

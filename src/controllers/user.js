@@ -23,7 +23,10 @@ export const getUser = catchAsync(async (req, res, next) => {
 });
 
 export const getUsers = catchAsync(async (req, res, next) => {
-    const users = await UserService.getUsers();
+    const { offset, limit } = req.query;
+    const query = { offset, limit };
+
+    const users = await UserService.getUsers(query);
 
     res.status(200).json({
         status: 'success',

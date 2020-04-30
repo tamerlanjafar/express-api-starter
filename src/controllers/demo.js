@@ -25,8 +25,8 @@ export const getDemo = catchAsync(async (req, res, next) => {
 });
 
 export const getDemos = catchAsync(async (req, res, next) => {
-    const { demo_name } = req.query;
-    const query = { demo_name };
+    const { offset, limit, demo_name } = req.query;
+    const query = { offset, limit, demo_name };
 
     const demos = await DemoService.getDemos(query);
 
@@ -68,9 +68,12 @@ export const deleteDemo = catchAsync(async (req, res, next) => {
 });
 
 export const getDemosByUser = catchAsync(async (req, res, next) => {
+    const { offset, limit } = req.query;
+    const query = { offset, limit };
+
     const { userId } = req.params;
 
-    const demos = await DemoService.getDemosByUser(userId);
+    const demos = await DemoService.getDemosByUser(query, userId);
 
     res.status(200).json({
         status: 'success',

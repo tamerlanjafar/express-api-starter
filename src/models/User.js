@@ -3,6 +3,7 @@ import moment from 'moment';
 import knex from '../db/knex';
 import { UserSchema } from './schemas/user';
 import { catchValidationError } from '../utils/error';
+import { defaultRecordLimit } from '../constants/api';
 
 export default class User {
     static selectableColumns = ['user_id', 'email', 'first_name', 'last_name', 'created_at', 'updated_at'];
@@ -61,8 +62,13 @@ export default class User {
         return User.findOne('email', email);
     };
 
-    static findMany = function () {
-        return knex('users').select(User.selectableColumns);
+    static findMany = function (query) {
+        let { offset, limit } = query;
+
+        offset = Number(offset) || 0;
+        limit = Number(limit) || defaultRecordLimit;
+
+        return knex('users').select(User.selectableColumns).offset(offset).limit(limit);
     };
 
     static updateOne = async function (userData, userId) {
