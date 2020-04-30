@@ -48,8 +48,8 @@ export default class DemoService {
     }
 
     static async getDemosByUser(userId) {
-        const result = await Demo.getDemosByUser(userId);
+        const demos = await Demo.getDemosByUser(userId);
 
-        return result;
+        return demos;
     }
 }

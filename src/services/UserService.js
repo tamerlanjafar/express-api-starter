@@ -24,19 +24,19 @@ export default class UserService {
     }
 
     static async getUser(userId) {
-        const [result] = await User.findById(userId);
+        const [user] = await User.findById(userId);
 
-        if (!result) {
+        if (!user) {
             throw generateAppError('userNotFound', 404);
         }
 
-        return result;
+        return user;
     }
 
     static async getUsers() {
-        const result = await User.findMany();
+        const users = await User.findMany();
 
-        return result;
+        return users;
     }
 
     static async updateUser({ existingUser, userData }) {
