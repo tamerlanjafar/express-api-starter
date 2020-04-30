@@ -4,12 +4,10 @@
   "description": "Rest API starter template for Node.js with Express and PostgreSQL",
   "main": "./src/server.js",
   "scripts": {
-    "start": "npm run build-server && npm run migrate-production && SET NODE_ENV=production && node ./build/server.js",
-    "dev": "npm run migrate-localhost && nodemon --exec babel-node src/server.js",
+    "start": "npm run build-server && npm run migrate && node ./build/server.js",
+    "dev": "npm run migrate && nodemon --exec babel-node src/server.js",
     "build-server": "babel -d ./build ./src -s",
-    "migrate-localhost": "knex migrate:latest --env development",
-    "migrate-staging": "knex migrate:latest --env staging",
-    "migrate-production": "knex migrate:latest --env production"
+    "migrate": "knex migrate:latest"
   },
   "author": "Tamerlan Jafar",
   "license": "MIT",

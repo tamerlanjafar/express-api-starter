@@ -1,43 +1,29 @@
 require('dotenv').config({ path: './src/config/config.env' });
 
+const migrationsDirectory = './src/db/migrations';
+
 module.exports = {
     development: {
         client: 'pg',
         connection: process.env.PG_CONNECTION_STRING,
         migrations: {
-            directory: './src/db/migrations'
+            directory: migrationsDirectory
         }
     },
 
     staging: {
-        client: 'postgresql',
-        connection: {
-            database: 'my_db',
-            user: 'username',
-            password: 'password'
-        },
-        pool: {
-            min: 2,
-            max: 10
-        },
+        client: 'pg',
+        connection: process.env.PG_CONNECTION_STRING,
         migrations: {
-            tableName: 'knex_migrations'
+            directory: migrationsDirectory
         }
     },
 
     production: {
-        client: 'postgresql',
-        connection: {
-            database: 'my_db',
-            user: 'username',
-            password: 'password'
-        },
-        pool: {
-            min: 2,
-            max: 10
-        },
+        client: 'pg',
+        connection: process.env.PG_CONNECTION_STRING,
         migrations: {
-            tableName: 'knex_migrations'
+            directory: migrationsDirectory
         }
     }
 };
