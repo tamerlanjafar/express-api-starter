@@ -7,7 +7,7 @@ export const createDemo = catchAsync(async (req, res, next) => {
 
     const demo = await DemoService.createDemo({ ...req.body, user_id });
 
-    res.status(200).json({
+    res.status(201).json({
         status: 'success',
         data: demo
     });
