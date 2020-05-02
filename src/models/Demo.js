@@ -1,6 +1,5 @@
 import moment from 'moment';
-import { DemoSchema } from './schemas/demo';
-import { catchValidationError } from '../utils/error';
+import { catchValidationError, throwValidationError } from '../utils/error';
 import knex from '../db/knex';
 import User from './User';
 import { defaultRecordLimit } from '../constants/api';
@@ -18,16 +17,17 @@ export default class Demo {
         `;
     };
 
-    static validate = async function (demo, context = {}) {
-        const opts = {
-            abortEarly: false,
-            stripUnknown: true,
-            context: {}
+    static validate = function (demoData, context = {}) {
+        const { demo_name, user_id } = demoData;
+
+        if (!demo_name) throwValidationError('demoNameIsRequired');
+
+        const demo = {
+            demo_name,
+            user_id
         };
 
-        const result = await DemoSchema.validate(demo, opts).catch(catchValidationError);
-
-        return result;
+        return demo;
     };
 
     static createOne = function (demo) {

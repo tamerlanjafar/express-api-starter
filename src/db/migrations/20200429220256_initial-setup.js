@@ -12,9 +12,9 @@ exports.up = knex => {
         .createTable('demos', table => {
             table.increments('demo_id').primary();
             table.string('demo_name', 50).notNullable();
+            table.integer('user_id').references('user_id').inTable('users').notNullable();
             table.timestamp('created_at').defaultTo(knex.fn.now());
             table.timestamp('updated_at').defaultTo(knex.fn.now());
-            table.integer('user_id').references('user_id').inTable('users').notNullable();
         });
 };
 

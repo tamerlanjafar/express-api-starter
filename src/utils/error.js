@@ -26,6 +26,10 @@ export const generateAppError = (messageKey, statusCode) => {
 
 export const catchAsync = fn => (req, res, next) => fn(req, res, next).catch(next);
 
+export const throwValidationError = messageKey => {
+    throw generateAppError(messageKey, 400);
+};
+
 export const catchValidationError = error => {
     const messageKey = error.inner[0].message;
     throw generateAppError(messageKey, 400);

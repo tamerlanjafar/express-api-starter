@@ -4,7 +4,8 @@ import { generateAppError } from '../utils/error';
 
 export default class UserService {
     static async createUser(userData) {
-        const user = await User.validate(userData, { validatePassword: true });
+        const user = User.validate(userData, { validatePassword: true });
+
         const [foundUser] = await User.findByEmail(user.email);
 
         if (foundUser) {
@@ -45,7 +46,7 @@ export default class UserService {
         });
 
         const validatePassword = typeof userData.password !== 'undefined';
-        await User.validate({ ...existingUser, ...userData }, { validatePassword });
+        User.validate({ ...existingUser, ...userData }, { validatePassword });
 
         const [user] = await User.updateOne(userData, existingUser.user_id);
 

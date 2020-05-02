@@ -1,8 +1,8 @@
 import bcrypt from 'bcrypt';
 import moment from 'moment';
+import validator from 'validator';
 import knex from '../db/knex';
-import { UserSchema } from './schemas/user';
-import { catchValidationError } from '../utils/error';
+import { throwValidationError } from '../utils/error';
 import { defaultRecordLimit } from '../constants/api';
 
 export default class User {
@@ -21,16 +21,29 @@ export default class User {
         `;
     };
 
-    static validate = async function (user, context = {}) {
-        const opts = {
-            abortEarly: false,
-            stripUnknown: true,
-            context: { validatePassword: context.validatePassword }
+    static validate = function (userData, context = {}) {
+        const { validatePassword } = context;
+        const { email, first_name, last_name, password } = userData;
+
+        if (!email) throwValidationError('emailIsRequired');
+        if (!validator.isEmail(email)) throwValidationError('invalidEmail');
+        if (!first_name) throwValidationError('firstNameIsRequired');
+        if (!last_name) throwValidationError('lastNameIsRequired');
+        if (validatePassword) {
+            if (!password) throwValidationError('passwordIsRequired');
+            if (password.length < 6) throwValidationError('passwordLessThanXCharacters');
+            if (password.length > 30) throwValidationError('passwordGreaterThanXCharacters');
+        }
+
+        const user = {
+            email: email.toLowerCase().trim(),
+            first_name,
+            last_name
         };
 
-        const result = await UserSchema.validate(user, opts).catch(catchValidationError);
+        if (password) user.password = password;
 
-        return result;
+        return user;
     };
 
     static hashPassword = async function (password) {

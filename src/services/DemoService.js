@@ -3,7 +3,7 @@ import { generateAppError } from '../utils/error';
 
 export default class DemoService {
     static async createDemo(demoData) {
-        const demo = await Demo.validate(demoData);
+        const demo = Demo.validate(demoData);
         const [newDemo] = await Demo.createOne(demo);
 
         return newDemo;
@@ -30,7 +30,7 @@ export default class DemoService {
             if (demoData[key] === existingDemo[key]) delete demoData[key];
         });
 
-        await Demo.validate({ ...existingDemo, ...demoData });
+        Demo.validate({ ...existingDemo, ...demoData });
 
         const [demo] = await Demo.updateOne(demoData, existingDemo.demo_id);
 
