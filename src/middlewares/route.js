@@ -4,23 +4,12 @@ export const methodNotAllowed = (req, res, next) => {
     next(generateAppError('methodNotAllowed', 405));
 };
 
-// Check if :userId is number
-export const checkUserId = (req, res, next) => {
-    const { userId } = req.params;
+// Check if parameter id is valid number
+export const checkParamId = paramName => (req, res, next) => {
+    const param = req.params[paramName];
 
-    if (!Number(userId)) {
-        return next(generateAppError('userNotFound', 404));
-    }
-
-    next();
-};
-
-// Check if :demoId is number
-export const checkDemoId = (req, res, next) => {
-    const { demoId } = req.params;
-
-    if (!Number(demoId)) {
-        return next(generateAppError('demoNotFound', 404));
+    if (!Number(param)) {
+        return next(generateAppError(`${paramName}NotValid`, 404));
     }
 
     next();

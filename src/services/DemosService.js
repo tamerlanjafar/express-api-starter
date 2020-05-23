@@ -1,10 +1,10 @@
 import Demo from '../models/Demo';
 import { generateAppError } from '../utils/error';
 
-export default class DemoService {
+export default class DemosService {
     static async createDemo(demoData) {
         const demo = Demo.validate(demoData);
-        const [newDemo] = await Demo.createOne(demo);
+        const [newDemo] = await Demo.create(demo);
 
         return newDemo;
     }
@@ -25,7 +25,10 @@ export default class DemoService {
         return demos;
     }
 
-    static async updateDemo({ existingDemo, demoData }) {
+    static async updateDemo({ existingDemo, data }) {
+        const { demo_name } = data;
+        const demoData = { demo_name };
+
         Object.keys(demoData).forEach(key => {
             if (demoData[key] === existingDemo[key]) delete demoData[key];
         });
@@ -47,8 +50,8 @@ export default class DemoService {
         return demo;
     }
 
-    static async getDemosByUser(query, userId) {
-        const demos = await Demo.getDemosByUser(query, userId);
+    static async getDemosByUserId(query, userId) {
+        const demos = await Demo.getDemosByUserId(query, userId);
 
         return demos;
     }

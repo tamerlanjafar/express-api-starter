@@ -1,11 +1,11 @@
-import DemoService from '../services/DemoService';
+import DemosService from '../services/DemosService';
 import { catchAsync } from '../utils/error';
 import { authorizeUser } from '../utils/auth';
 
 export const createDemo = catchAsync(async (req, res, next) => {
     const { user_id } = req.user;
 
-    const demo = await DemoService.createDemo({ ...req.body, user_id });
+    const demo = await DemosService.createDemo({ ...req.body, user_id });
 
     res.status(201).json({
         status: 'success',
@@ -16,7 +16,7 @@ export const createDemo = catchAsync(async (req, res, next) => {
 export const getDemo = catchAsync(async (req, res, next) => {
     const { demoId } = req.params;
 
-    const demo = await DemoService.getDemo(demoId);
+    const demo = await DemosService.getDemo(demoId);
 
     res.status(200).json({
         status: 'success',
@@ -25,10 +25,7 @@ export const getDemo = catchAsync(async (req, res, next) => {
 });
 
 export const getDemos = catchAsync(async (req, res, next) => {
-    const { offset, limit, demo_name } = req.query;
-    const query = { offset, limit, demo_name };
-
-    const demos = await DemoService.getDemos(query);
+    const demos = await DemosService.getDemos(req.query);
 
     res.status(200).json({
         status: 'success',
@@ -37,14 +34,11 @@ export const getDemos = catchAsync(async (req, res, next) => {
 });
 
 export const updateDemo = catchAsync(async (req, res, next) => {
-    const existingDemo = await DemoService.getDemo(req.params.demoId);
+    const existingDemo = await DemosService.getDemo(req.params.demoId);
 
-    authorizeUser(req.user, existingDemo.user.user_id);
+    authorizeUser(req.user.user_id, existingDemo.user.user_id);
 
-    const { demo_name } = req.body;
-    const demoData = { demo_name };
-
-    const demo = await DemoService.updateDemo({ existingDemo, demoData });
+    const demo = await DemosService.updateDemo({ existingDemo, data: req.body });
 
     res.status(200).json({
         status: 'success',
@@ -55,11 +49,11 @@ export const updateDemo = catchAsync(async (req, res, next) => {
 export const deleteDemo = catchAsync(async (req, res, next) => {
     const { demoId } = req.params;
 
-    const existingDemo = await DemoService.getDemo(demoId);
+    const existingDemo = await DemosService.getDemo(demoId);
 
-    authorizeUser(req.user, existingDemo.user.user_id);
+    authorizeUser(req.user.user_id, existingDemo.user.user_id);
 
-    const demo = await DemoService.deleteDemo(demoId);
+    const demo = await DemosService.deleteDemo(demoId);
 
     res.status(200).json({
         status: 'success',
@@ -67,13 +61,10 @@ export const deleteDemo = catchAsync(async (req, res, next) => {
     });
 });
 
-export const getDemosByUser = catchAsync(async (req, res, next) => {
-    const { offset, limit } = req.query;
-    const query = { offset, limit };
-
+export const getDemosByUserId = catchAsync(async (req, res, next) => {
     const { userId } = req.params;
 
-    const demos = await DemoService.getDemosByUser(query, userId);
+    const demos = await DemosService.getDemosByUserId(req.query, userId);
 
     res.status(200).json({
         status: 'success',

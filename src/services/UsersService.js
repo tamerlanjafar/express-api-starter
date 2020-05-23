@@ -2,7 +2,7 @@ import User from '../models/User';
 import { signJwtToken } from '../utils/jwt';
 import { generateAppError } from '../utils/error';
 
-export default class UserService {
+export default class UsersService {
     static async createUser(userData) {
         const user = User.validate(userData, { validatePassword: true });
 
@@ -12,7 +12,7 @@ export default class UserService {
             throw generateAppError('emailAlreadyRegistered', 400);
         }
 
-        const [newUser] = await User.createOne(user);
+        const [newUser] = await User.create(user);
         const token = signJwtToken({
             id: newUser.user_id,
             email: newUser.email
@@ -40,27 +40,31 @@ export default class UserService {
         return users;
     }
 
-    static async updateUser({ existingUser, userData }) {
+    static async updateUser({ existingUser, data }) {
+        const { first_name, last_name, password } = data;
+        const userData = { first_name, last_name, password };
+
         Object.keys(userData).forEach(key => {
             if (userData[key] === existingUser[key]) delete userData[key];
         });
 
         const validatePassword = typeof userData.password !== 'undefined';
+
         User.validate({ ...existingUser, ...userData }, { validatePassword });
 
-        const [user] = await User.updateOne(userData, existingUser.user_id);
+        const [updatedUser] = await User.updateOne(userData, existingUser.user_id);
 
-        return user;
+        return updatedUser;
     }
 
     static async deleteUser(userId) {
-        const [user] = await User.deleteOne(userId);
+        const [deletedUser] = await User.deleteOne(userId);
 
-        if (!user) {
+        if (!deletedUser) {
             throw generateAppError('userNotFound', 404);
         }
 
-        return user;
+        return deletedUser;
     }
 
     static async loginUser(user) {
@@ -99,4 +103,4 @@ export default class UserService {
     }
 }
 
-module.exports = UserService;
+module.exports = UsersService;

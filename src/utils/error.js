@@ -1,4 +1,5 @@
 import { validationMessages } from '../constants/validation';
+import knex from '../db/knex';
 
 class AppError extends Error {
     constructor(error, statusCode) {
@@ -26,11 +27,19 @@ export const generateAppError = (messageKey, statusCode) => {
 
 export const catchAsync = fn => (req, res, next) => fn(req, res, next).catch(next);
 
-export const throwValidationError = messageKey => {
-    throw generateAppError(messageKey, 400);
+export const catchTransaction = async fn => {
+    const transaction = await knex.transaction();
+
+    try {
+        const result = await fn(transaction);
+        await transaction.commit();
+        return result;
+    } catch (error) {
+        await transaction.rollback();
+        throw new Error(error);
+    }
 };
 
-export const catchValidationError = error => {
-    const messageKey = error.inner[0].message;
+export const throwValidationError = messageKey => {
     throw generateAppError(messageKey, 400);
 };

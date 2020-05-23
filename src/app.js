@@ -9,6 +9,7 @@ import hpp from 'hpp';
 import routes from './routes';
 import errorHandler from './middlewares/error';
 import { generateAppError } from './utils/error';
+import { validationMessages } from './constants/validation';
 
 const app = express();
 
@@ -36,7 +37,7 @@ app.use(hpp());
 const limiter = rateLimit({
     windowMs: 10 * 60 * 1000, // 10 mins
     max: 500,
-    message: 'Too Many Requests from this IP, please try again in 10 minutes.'
+    message: validationMessages.tooManyRequests
 });
 app.use(limiter);
 

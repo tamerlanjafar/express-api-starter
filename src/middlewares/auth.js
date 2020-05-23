@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import UserService from '../services/UserService';
+import UsersService from '../services/UsersService';
 import { catchAsync, generateAppError } from '../utils/error';
 
 // Authenticate user for private routes
@@ -16,7 +16,7 @@ export const authenticate = catchAsync(async (req, res, next) => {
             // Verify token
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-            const currentUser = await UserService.getUser(decoded.id);
+            const currentUser = await UsersService.getUser(decoded.id);
 
             if (!currentUser) {
                 return next(generateAppError('invalidToken', 401));
